@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+message DriverRanking {
+    message Driver {
+        uint32 id = 1;
+        string name = 2;
+        string abbr = 3;
+        uint32 number = 4;
+        string image = 5;
+    }
+
+    message Team {
+        uint32 id = 1;
+        string name = 2;
+        string logo = 3;
+    }
+
+    uint32 position = 1;
+    Driver driver = 2;
+    Team team = 3;
+    uint32 points = 4;
+    string wins = 5;
+    string behind = 6;
+    uint32 season = 7;
+}
