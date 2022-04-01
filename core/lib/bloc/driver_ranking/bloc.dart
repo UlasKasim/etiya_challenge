@@ -3,21 +3,26 @@ import 'package:core/model/driver_ranking/_driver_ranking_exporter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../services/rankings/drivers_rankings.dart';
-import 'event.dart';
+import 'state.dart';
 
 class DriverRankingBloc extends Cubit<DriverRankingEvent> {
-  DriverRankingBloc() : super(NoDriverRankingsState());
-
+  DriverRankingBloc() : super(NoDriverRankingsState()) {
+    fetchDriverRankings();
+  }
+  List<DriverRanking> driverRankingList = [];
   String filterText = "";
 
-  void setFilterText(String value) => filterText = value;
+  void setFilterText(String value) {
+    filterText = value;
+    filterList();
+  }
 
-  Future fetchDriverRankings() async {
+  void fetchDriverRankings() async {
     try {
       emit(DriverRankingsLoadingState());
       var listApiResponse = await DriverRankingService().getDriverRankings();
       if (listApiResponse != null || listApiResponse!.data.isNotEmpty) {
-        List<DriverRanking> driverRankingList = listApiResponse.data;
+        driverRankingList = listApiResponse.data;
         emit(DriverRankingsLoadedState(driverRankingList));
       } else {
         emit(DriverRankingErrorState("DriverRanking not fetched"));
@@ -27,14 +32,13 @@ class DriverRankingBloc extends Cubit<DriverRankingEvent> {
     }
   }
 
-  Future filterList() async {
-    List<DriverRanking> driverRankingList =
-        (state as DriverRankingsLoadedState).list;
+  void filterList() async {
+    emit(DriverRankingsLoadingState());
+
     if (filterText.isEmpty) {
       emit(DriverRankingsLoadedState(driverRankingList));
     } else {
-      emit(DriverRankingsFilteringState(
-          driverRankingList.filterByFilterText(filterText)));
+      emit(DriverRankingsFilteringState(driverRankingList.filterByFilterText(filterText)));
     }
   }
 }

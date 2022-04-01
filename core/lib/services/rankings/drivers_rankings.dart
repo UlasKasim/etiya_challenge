@@ -10,7 +10,7 @@ class DriverRankingService {
 
   Future<ListApiResponse<DriverRanking>?> getDriverRankings({
     String season = "2022",
-    Function(int, int)? receiveCallback,
+    Function(double)? receiveCallback,
     Function(String)? errorCallback,
   }) async {
     try {
@@ -21,6 +21,7 @@ class DriverRankingService {
         options: Options(
           headers: RapidApiConfig.getHeaders,
         ),
+        onReceiveProgress: (p0, p1) => receiveCallback?.call((p1 / p0) * 100),
       );
       if (response.statusCode != 200) {
         errorCallback?.call(response.statusMessage ?? "");
