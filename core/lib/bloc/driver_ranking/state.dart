@@ -1,10 +1,6 @@
 import 'package:core/grpc/dart_gen/_dart_gen_exporter.dart';
-import 'package:equatable/equatable.dart';
 
-abstract class DriverRankingEvent extends Equatable {
-  @override
-  List<Object> get props => [];
-}
+abstract class DriverRankingEvent {}
 
 class NoDriverRankingsState extends DriverRankingEvent {}
 
